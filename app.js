@@ -49,6 +49,7 @@
   document.addEventListener("DOMContentLoaded", init);
 
   async function init() {
+    applyTheme();
     bindUI();
     const { data: { session } } = await db.auth.getSession();
     if (session?.user) {
@@ -72,6 +73,7 @@
   function bindUI() {
     $("loginForm").addEventListener("submit", login);
     $("logoutBtn").addEventListener("click", () => db.auth.signOut());
+    $("themeToggle").addEventListener("click", toggleTheme);
 
     qsa(".nav-btn").forEach(btn => btn.addEventListener("click", () => switchSection(btn.dataset.section)));
     qsa(".segment").forEach(btn => btn.addEventListener("click", () => {
@@ -108,6 +110,30 @@
     $("removeEmployeeBtn").addEventListener("click", removeCurrentEmployee);
 
     qsa(".close-dialog").forEach(btn => btn.addEventListener("click", () => btn.closest("dialog").close()));
+  }
+
+  function applyTheme() {
+    const saved = localStorage.getItem("workboard:theme");
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = saved || (prefersDark ? "dark" : "light");
+    document.documentElement.dataset.theme = theme;
+    updateThemeButton(theme);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.dataset.theme || "light";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("workboard:theme", next);
+    updateThemeButton(next);
+  }
+
+  function updateThemeButton(theme) {
+    const button = $("themeToggle");
+    if (!button) return;
+    button.textContent = theme === "dark" ? "☀" : "☾";
+    button.title = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+    button.setAttribute("aria-label", button.title);
   }
 
   async function login(e) {
