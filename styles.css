@@ -214,3 +214,115 @@ dialog::backdrop { background: rgba(38,34,30,.35); backdrop-filter: blur(3px); }
   .form-grid { grid-template-columns: 1fr; }
   .auth-card { padding: 26px 20px; }
 }
+
+
+/* --- Theme + company logo additions --- */
+[data-theme="dark"] {
+  --bg: #171717;
+  --panel: #202020;
+  --text: #f4f0ea;
+  --muted: #aaa39a;
+  --line: #3a3733;
+  --line-soft: #302e2b;
+  --accent: #f1ede6;
+  --accent-text: #181715;
+  --danger: #d86a61;
+  --shadow: 0 12px 34px rgba(0,0,0,.28);
+}
+[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(176,128,105,.07), transparent 28%),
+    radial-gradient(circle at 85% 70%, rgba(82,118,104,.06), transparent 30%),
+    var(--bg);
+}
+[data-theme="dark"] .auth-screen {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(176,128,105,.07), transparent 28%),
+    radial-gradient(circle at 85% 70%, rgba(82,118,104,.06), transparent 30%),
+    var(--bg);
+}
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: #191919;
+  color: var(--text);
+}
+[data-theme="dark"] .topbar { background: rgba(23,23,23,.92); }
+[data-theme="dark"] .main-nav,
+[data-theme="dark"] .segmented { background: rgba(255,255,255,.035); }
+[data-theme="dark"] .search-wrap { background: #191919; }
+[data-theme="dark"] .task-card,
+[data-theme="dark"] .info-card,
+[data-theme="dark"] .auth-card,
+[data-theme="dark"] dialog.modal { background: var(--panel); }
+[data-theme="dark"] .project-tag {
+  background: color-mix(in srgb, var(--project-color) 20%, #202020);
+}
+[data-theme="dark"] .tag { background: #2a2825; }
+[data-theme="dark"] .kanban-column { background: rgba(255,255,255,.025); }
+[data-theme="dark"] .avatar { background: #34312d; }
+
+.company-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible;
+}
+.company-logo img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
+.company-logo > span { display: none; }
+.company-logo.logo-fallback {
+  background: var(--text);
+  color: var(--panel);
+  display: grid;
+  place-items: center;
+}
+.company-logo.logo-fallback > span {
+  display: block;
+  font-weight: 700;
+}
+.login-logo {
+  width: min(240px, 78%);
+  height: 86px;
+  margin-bottom: 24px;
+}
+.login-logo img { max-height: 86px; }
+.login-logo.logo-fallback {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  font-size: 24px;
+}
+.header-logo {
+  width: 150px;
+  height: 44px;
+  flex: 0 0 auto;
+}
+.header-logo img {
+  max-height: 44px;
+  max-width: 150px;
+}
+.header-logo.logo-fallback {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+@media (max-width: 760px) {
+  [data-theme="dark"] .main-nav { background: rgba(32,32,32,.95); }
+  .header-logo {
+    width: 112px;
+    height: 38px;
+  }
+  .header-logo img {
+    max-width: 112px;
+    max-height: 38px;
+  }
+}
