@@ -15,7 +15,7 @@
 
   <section id="authScreen" class="auth-screen">
     <div class="auth-card">
-      <div class="brand-mark">W</div>
+      <div class="company-logo login-logo"><img src="logo.png" alt="Company logo" onerror="this.style.display='none';this.parentElement.classList.add('logo-fallback')"><span>W</span></div>
       <p class="eyebrow">YOUR OFFICE BOARD</p>
       <h1>Work without losing track of the work.</h1>
       <p class="muted">Sign in to your private task board.</p>
@@ -38,7 +38,7 @@
   <div id="app" class="app hidden">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark small">W</div>
+        <div class="company-logo header-logo"><img src="logo.png" alt="Company logo" onerror="this.style.display='none';this.parentElement.classList.add('logo-fallback')"><span>W</span></div>
         <div>
           <strong>Workboard</strong>
           <span id="syncLabel">Synced</span>
@@ -53,6 +53,7 @@
 
       <div class="top-actions">
         <button id="newTaskTop" class="btn primary">+ New task</button>
+        <button id="themeToggle" class="icon-btn" title="Switch theme" aria-label="Switch theme">☾</button>
         <button id="logoutBtn" class="icon-btn" title="Sign out">↗</button>
       </div>
     </header>
