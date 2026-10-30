@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f1ea" />
+  <title>Workboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand-mark">W</div>
+      <p class="eyebrow">YOUR OFFICE BOARD</p>
+      <h1>Work without losing track of the work.</h1>
+      <p class="muted">Sign in to your private task board.</p>
+
+      <form id="loginForm" class="stack gap-12">
+        <label>
+          <span>Email</span>
+          <input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••">
+        </label>
+        <button class="btn primary wide" type="submit">Enter workboard</button>
+        <p id="loginError" class="form-error"></p>
+      </form>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark small">W</div>
+        <div>
+          <strong>Workboard</strong>
+          <span id="syncLabel">Synced</span>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="Main">
+        <button class="nav-btn active" data-section="tasks">Tasks</button>
+        <button class="nav-btn" data-section="projects">Projects</button>
+        <button class="nav-btn" data-section="team">Team</button>
+      </nav>
+
+      <div class="top-actions">
+        <button id="newTaskTop" class="btn primary">+ New task</button>
+        <button id="logoutBtn" class="icon-btn" title="Sign out">↗</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="tasksSection" class="page-section active">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">TASKS</p>
+            <h2 id="greeting">What’s moving?</h2>
+          </div>
+          <div class="head-actions">
+            <button id="newTaskMobile" class="btn primary">+ New task</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="segmented" role="tablist" aria-label="Task view">
+            <button class="segment active" data-view="person">By person</button>
+            <button class="segment" data-view="status">By status</button>
+          </div>
+
+          <select id="projectFilter" aria-label="Filter by project">
+            <option value="all">All projects</option>
+          </select>
+
+          <div class="search-wrap">
+            <span>⌕</span>
+            <input id="taskSearch" type="search" placeholder="Search tasks">
+          </div>
+        </div>
+
+        <div class="mobile-column-picker">
+          <select id="mobileColumnSelect" aria-label="Choose column"></select>
+        </div>
+
+        <div id="kanban" class="kanban" aria-live="polite"></div>
+
+        <div id="emptyBoard" class="empty-state hidden">
+          <div class="empty-emoji">✦</div>
+          <h3>No tasks here yet.</h3>
+          <p>Create the first task and attach it to a project.</p>
+          <button class="btn primary" id="emptyCreateBtn">Create task</button>
+        </div>
+      </section>
+
+      <section id="projectsSection" class="page-section">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">PROJECTS</p>
+            <h2>Keep the work attached to a purpose.</h2>
+          </div>
+          <button id="addProjectBtn" class="btn primary">+ Project</button>
+        </div>
+        <div id="projectsGrid" class="cards-grid"></div>
+      </section>
+
+      <section id="teamSection" class="page-section">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">TEAM</p>
+            <h2>Who can the work belong to?</h2>
+          </div>
+          <button id="addEmployeeBtn" class="btn primary">+ Employee</button>
+        </div>
+        <div id="teamGrid" class="cards-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="taskDialog" class="modal">
+    <form id="taskForm" method="dialog">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow" id="taskModalEyebrow">NEW TASK</p>
+          <h3 id="taskModalTitle">Create task</h3>
+        </div>
+        <button type="button" class="icon-btn close-dialog">×</button>
+      </div>
+
+      <input id="taskId" type="hidden">
+
+      <label>
+        <span>Task name *</span>
+        <input id="taskTitle" required maxlength="180" placeholder="e.g. Finish launch poster">
+      </label>
+
+      <div class="form-grid">
+        <label>
+          <span>Project *</span>
+          <select id="taskProject" required></select>
+        </label>
+        <label>
+          <span>Assigned to</span>
+          <select id="taskEmployee"></select>
+        </label>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          <span>Status</span>
+          <select id="taskStatus">
+            <option value="backlog">Backlog</option>
+            <option value="todo">To do</option>
+            <option value="in_progress">In progress</option>
+            <option value="review">Review</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+        <label>
+          <span>Due date</span>
+          <input id="taskDueDate" type="date">
+        </label>
+      </div>
+
+      <label>
+        <span>Description</span>
+        <textarea id="taskDescription" rows="5" placeholder="Notes, links, context…"></textarea>
+      </label>
+
+      <div class="modal-actions">
+        <button id="deleteTaskBtn" type="button" class="btn danger ghost hidden">Delete</button>
+        <div class="spacer"></div>
+        <button type="button" class="btn ghost close-dialog">Cancel</button>
+        <button type="submit" class="btn primary">Save task</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="projectDialog" class="modal small-modal">
+    <form id="projectForm" method="dialog">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">PROJECT</p>
+          <h3 id="projectModalTitle">New project</h3>
+        </div>
+        <button type="button" class="icon-btn close-dialog">×</button>
+      </div>
+
+      <input id="projectId" type="hidden">
+      <label>
+        <span>Project name *</span>
+        <input id="projectName" required maxlength="100" placeholder="e.g. Pocket Novel">
+      </label>
+      <label>
+        <span>Project colour</span>
+        <div class="color-row">
+          <input id="projectColor" type="color" value="#8b6f65">
+          <span class="muted">Used as a soft card accent.</span>
+        </div>
+      </label>
+
+      <div class="modal-actions">
+        <button id="archiveProjectBtn" type="button" class="btn ghost hidden">Archive</button>
+        <div class="spacer"></div>
+        <button type="button" class="btn ghost close-dialog">Cancel</button>
+        <button type="submit" class="btn primary">Save project</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="employeeDialog" class="modal small-modal">
+    <form id="employeeForm" method="dialog">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">TEAM MEMBER</p>
+          <h3 id="employeeModalTitle">Add employee</h3>
+        </div>
+        <button type="button" class="icon-btn close-dialog">×</button>
+      </div>
+
+      <input id="employeeId" type="hidden">
+      <label>
+        <span>Name *</span>
+        <input id="employeeName" required maxlength="100" placeholder="e.g. Anand">
+      </label>
+
+      <div class="modal-actions">
+        <button id="removeEmployeeBtn" type="button" class="btn danger ghost hidden">Remove</button>
+        <div class="spacer"></div>
+        <button type="button" class="btn ghost close-dialog">Cancel</button>
+        <button type="submit" class="btn primary">Save employee</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="confirmDialog" class="modal small-modal">
+    <div>
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">CONFIRM</p>
+          <h3 id="confirmTitle">Are you sure?</h3>
+        </div>
+      </div>
+      <p id="confirmText" class="muted"></p>
+      <div class="modal-actions">
+        <div class="spacer"></div>
+        <button id="confirmCancel" class="btn ghost">Cancel</button>
+        <button id="confirmOk" class="btn danger">Confirm</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
